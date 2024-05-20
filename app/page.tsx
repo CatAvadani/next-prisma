@@ -1,5 +1,7 @@
+import { auth } from '@/auth';
 import { db } from '@/prisma/db';
 import PostForm from './components/PostForm';
+import SigninButton from './components/SigninButton';
 
 export default async function Home() {
   const posts = await db.post.findMany({
@@ -7,9 +9,17 @@ export default async function Home() {
     orderBy: { id: 'desc' },
   });
 
+  const session = await auth();
+
   return (
     <main className='flex  flex-col gap-8  p-24 items-center'>
-      <PostForm />
+      {session?.user && (
+        <header>
+          <p>{session.user.name}</p>
+          <p>{session.user.email}</p>
+        </header>
+      )}
+      {session?.user ? <PostForm /> : <SigninButton />}
       {posts.map((post: any) => (
         <div key={post.id} className=' flex flex-col gap-2'>
           <h2>{post.title}</h2>
