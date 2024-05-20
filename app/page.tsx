@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import { db } from '@/prisma/db';
+import SignOutUser from './actions/actions';
 import PostForm from './components/PostForm';
 import SigninButton from './components/SigninButton';
 
@@ -17,6 +18,9 @@ export default async function Home() {
         <header>
           <p>{session.user.name}</p>
           <p>{session.user.email}</p>
+          <form action={SignOutUser}>
+            <button>Sign Out</button>
+          </form>
         </header>
       )}
       {session?.user ? <PostForm /> : <SigninButton />}
